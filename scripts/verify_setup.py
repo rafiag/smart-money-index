@@ -7,7 +7,10 @@ Run this before the full data collection to ensure everything is configured corr
 """
 
 import sys
-from datetime import datetime
+import os
+
+# Add project root to path so we can import src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.config import get_settings
 from src.database import Ticker, get_session, init_db
@@ -47,7 +50,6 @@ def main():
             print(f"   ✓ Configuration validation passed")
         except ValueError as e:
             print(f"   ⚠ Configuration validation warning: {e}")
-            print(f"   Note: Reddit credentials may not be set (required for Reddit data collection)")
 
     except Exception as e:
         errors.append(f"Configuration error: {e}")
@@ -110,9 +112,7 @@ def main():
         ("pandas", "Data manipulation"),
         ("sqlalchemy", "Database ORM"),
         ("yfinance", "Yahoo Finance API"),
-        ("praw", "Reddit API"),
         ("pytrends", "Google Trends API"),
-        ("textblob", "Sentiment analysis"),
         ("plotly", "Interactive charts"),
         ("streamlit", "Web dashboard"),
     ]
@@ -141,8 +141,7 @@ def main():
     else:
         print("\n✓ All checks passed! Ready for data collection.")
         print("\nNext steps:")
-        print("  1. Configure Reddit API credentials in .env file")
-        print("  2. Run: python collect_data.py")
+        print("  1. Run: python collect_data.py")
         return 0
 
 
