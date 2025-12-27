@@ -157,7 +157,7 @@ class TestDatabaseModels:
 
     def test_google_trend(self, test_db):
         """Test creating Google Trends data"""
-        ticker = Ticker(symbol="GME", company_name="GameStop")
+        ticker = Ticker(symbol="COIN", company_name="Coinbase")
         test_db.add(ticker)
         test_db.flush()
 
@@ -175,7 +175,7 @@ class TestDatabaseModels:
 
     def test_reddit_sentiment(self, test_db):
         """Test creating Reddit sentiment data"""
-        ticker = Ticker(symbol="AMC", company_name="AMC Entertainment")
+        ticker = Ticker(symbol="HOOD", company_name="Robinhood")
         test_db.add(ticker)
         test_db.flush()
 
@@ -195,7 +195,7 @@ class TestDatabaseModels:
 
     def test_z_score(self, test_db):
         """Test creating Z-score data"""
-        ticker = Ticker(symbol="PLTR", company_name="Palantir")
+        ticker = Ticker(symbol="SMCI", company_name="Super Micro Computer")
         test_db.add(ticker)
         test_db.flush()
 

@@ -27,7 +27,7 @@ class TestSettings:
 
         expected_tickers = [
             'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA',
-            'ASTS', 'MU', 'GME', 'AMC', 'PLTR'
+            'ASTS', 'MU', 'COIN', 'SMCI', 'HOOD'
         ]
 
         for ticker in expected_tickers:

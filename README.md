@@ -54,9 +54,9 @@ When institutional and retail investors move in opposite directions, it can sign
 **Hype Stocks (High Retail Interest):**
 - ASTS (AST SpaceMobile)
 - MU (Micron Technology)
-- GME (GameStop)
-- AMC (AMC Entertainment)
-- PLTR (Palantir)
+- COIN (Coinbase)
+- SMCI (Super Micro Computer)
+- HOOD (Robinhood)
 
 ## Quick Start
 

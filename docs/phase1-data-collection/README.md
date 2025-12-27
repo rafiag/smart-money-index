@@ -73,7 +73,7 @@ cat logs/divergence.log
 
 ### Stock Coverage (12)
 **Magnificent 7:** AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA
-**Hype Stocks:** ASTS, MU, GME, AMC, PLTR
+**Hype Stocks:** ASTS, MU, COIN, SMCI, HOOD
 
 ### Key Features
 - ✅ **Rate Limiting** - Respects API limits automatically

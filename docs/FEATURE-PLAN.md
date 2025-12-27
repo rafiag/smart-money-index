@@ -60,7 +60,7 @@ Without this, you'd be trying to compare apples to oranges. This lets you instan
 **Stock Selection:**
 - Choose from 12 stocks via a dropdown showing full company name (not just ticker symbols)
 - Magnificent 7: Apple, Microsoft, Google, Amazon, Nvidia, Meta, Tesla
-- Hype Stocks: AST SpaceMobile, Micron, GameStop, AMC, Palantir
+- Hype Stocks: AST SpaceMobile, Micron, Coinbase, Super Micro Computer, Robinhood
 
 **Date Range Selection:**
 - Pick any start and end date from 2024 onward

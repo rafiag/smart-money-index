@@ -69,7 +69,7 @@ class Settings:
         # Magnificent 7
         "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA",
         # Hype Stocks
-        "ASTS", "MU", "GME", "AMC", "PLTR"
+        "ASTS", "MU", "COIN", "SMCI", "HOOD"
     ]
 
     # Ticker company name mapping
@@ -83,9 +83,9 @@ class Settings:
         "TSLA": "Tesla Inc.",
         "ASTS": "AST SpaceMobile Inc.",
         "MU": "Micron Technology Inc.",
-        "GME": "GameStop Corp.",
-        "AMC": "AMC Entertainment Holdings Inc.",
-        "PLTR": "Palantir Technologies Inc."
+        "COIN": "Coinbase Global Inc.",
+        "SMCI": "Super Micro Computer Inc.",
+        "HOOD": "Robinhood Markets Inc."
     }
 
     # Dashboard settings

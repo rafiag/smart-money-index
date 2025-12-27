@@ -280,9 +280,9 @@ Visualizes the tension between institutional investors ("smart money") and retai
 **Hype Stocks (High Retail Interest):**
 - ASTS (AST SpaceMobile)
 - MU (Micron Technology)
-- GME (GameStop)
-- AMC (AMC Entertainment)
-- PLTR (Palantir)
+- COIN (Coinbase)
+- SMCI (Super Micro Computer)
+- HOOD (Robinhood)
 
 #### Success Criteria
 The MVP is successful when:
