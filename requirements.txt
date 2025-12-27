@@ -1,0 +1,86 @@
+# =============================================================================
+# Smart Money Divergence Index - Python Dependencies
+# =============================================================================
+# Install with: pip install -r requirements.txt
+# Compatible with Python 3.10+
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Core Data Science & Analytics
+# -----------------------------------------------------------------------------
+pandas>=2.1.0                   # Data manipulation and analysis
+numpy>=1.26.0                   # Numerical computing
+scipy>=1.11.0                   # Scientific computing and statistics
+
+# -----------------------------------------------------------------------------
+# Database & ORM
+# -----------------------------------------------------------------------------
+sqlalchemy>=2.0.0               # SQL toolkit and ORM
+psycopg2-binary>=2.9.0          # PostgreSQL adapter for Python
+alembic>=1.13.0                 # Database migration tool
+
+# -----------------------------------------------------------------------------
+# Data Collection APIs
+# -----------------------------------------------------------------------------
+edgartools>=2.20.0              # SEC EDGAR data (13F filings, Form 4)
+praw>=7.7.0                     # Reddit API wrapper
+pytrends>=4.9.0                 # Google Trends API (unofficial)
+yfinance>=0.2.30                # Yahoo Finance market data
+
+# -----------------------------------------------------------------------------
+# Natural Language Processing (Sentiment Analysis)
+# -----------------------------------------------------------------------------
+textblob>=0.17.0                # Simple sentiment analysis
+nltk>=3.8.0                     # Natural language toolkit
+vaderSentiment>=3.3.0           # Rule-based sentiment analyzer for social media
+
+# -----------------------------------------------------------------------------
+# Web Dashboard & Visualization
+# -----------------------------------------------------------------------------
+streamlit>=1.29.0               # Web app framework
+plotly>=5.18.0                  # Interactive charts and graphs
+
+# -----------------------------------------------------------------------------
+# Task Scheduling & Automation (Phase 2)
+# -----------------------------------------------------------------------------
+apscheduler>=3.10.0             # Job scheduling library
+celery>=5.3.0                   # Distributed task queue
+redis>=5.0.0                    # In-memory data store (for Celery backend)
+
+# -----------------------------------------------------------------------------
+# Utilities
+# -----------------------------------------------------------------------------
+python-dotenv>=1.0.0            # Environment variable management
+requests>=2.31.0                # HTTP library for API calls
+pytz>=2023.3                    # Timezone handling
+python-dateutil>=2.8.0          # Date/time utilities
+
+# -----------------------------------------------------------------------------
+# Testing & Quality Assurance
+# -----------------------------------------------------------------------------
+pytest>=7.4.0                   # Testing framework
+pytest-cov>=4.1.0               # Coverage plugin for pytest
+pytest-mock>=3.12.0             # Mocking plugin for pytest
+pytest-asyncio>=0.21.0          # Async support for pytest
+
+# -----------------------------------------------------------------------------
+# Code Quality & Formatting
+# -----------------------------------------------------------------------------
+black>=23.12.0                  # Code formatter
+flake8>=6.1.0                   # Linting tool
+mypy>=1.7.0                     # Static type checker
+isort>=5.13.0                   # Import statement sorter
+
+# -----------------------------------------------------------------------------
+# Development Tools
+# -----------------------------------------------------------------------------
+jupyter>=1.0.0                  # Jupyter notebook
+ipython>=8.18.0                 # Enhanced interactive Python shell
+ipdb>=0.13.0                    # IPython debugger
+
+# -----------------------------------------------------------------------------
+# Additional Dependencies
+# -----------------------------------------------------------------------------
+beautifulsoup4>=4.12.0          # HTML parsing (for web scraping if needed)
+lxml>=4.9.0                     # XML/HTML parser
+openpyxl>=3.1.0                 # Excel file support for pandas

@@ -1,0 +1,27 @@
+# =============================================================================
+# Minimal Dependencies - Install these first
+# =============================================================================
+# Install with: pip install -r requirements-minimal.txt
+# This installs only the essential packages needed to get started
+# =============================================================================
+
+# Core dependencies
+pandas
+numpy
+sqlalchemy
+python-dotenv
+requests
+
+# Dashboard
+streamlit
+plotly
+
+# Data sources (install one at a time if issues occur)
+yfinance
+praw
+pytrends
+edgartools
+
+# Database
+alembic
+psycopg2-binary

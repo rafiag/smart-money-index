@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /B /S:*)",
+      "Bash(\"venv\\\\Scripts\\\\python.exe\" storage/validators.py)",
+      "Bash(\"venv\\\\Scripts\\\\python.exe\" test_db_manual.py)",
+      "Bash(\"venv\\\\Scripts\\\\python.exe\" -m pytest tests/unit/test_config.py -v)",
+      "Bash(\"venv\\\\Scripts\\\\python.exe\" -m pytest tests/unit/test_rate_limiter.py -v)",
+      "Bash(\"venv\\\\Scripts\\\\python.exe\" -m pytest tests/integration/test_database.py -v)",
+      "Bash(\"venv\\\\Scripts\\\\python.exe\" test_price_collector.py)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "context7",
+    "sequential-thinking",
+    "github"
+  ],
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
+    "playwright-skill@playwright-skill": false
+  }
+}
