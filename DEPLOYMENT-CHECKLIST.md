@@ -15,7 +15,7 @@
 - [ ] Database URL configured in `.env`:
   - [ ] Development: `DATABASE_URL=sqlite:///data/divergence.db`
   - [ ] Production: PostgreSQL URL (if applicable)
-- [ ] Database tables created: `python -m src.database.init_db`
+- [ ] Database tables created: `python collect_data.py` (First run initializes)
 - [ ] Database connection tested
 
 ### 4. Environment Variables Configuration
@@ -41,27 +41,18 @@ Review and configure `.env` file:
 ## Phase 2: Data Collection
 
 ### 5. Test Individual Data Collectors
-- [ ] Test SEC Form 13F collector: `python test_sec_collector.py`
-- [ ] Test SEC Form 4 collector: `python test_form4_collector.py`
-- [ ] Test Google Trends collector: `python test_trends_collector.py`
-- [ ] Test Yahoo Finance collector: `python test_price_collector.py`
+- [ ] Test SEC Form 13F/4 collectors: `python tests/unit/test_form4_parser.py`
+- [ ] Test Price/Trends connectivity: `python scripts/verify_setup.py`
 
 ### 6. Initial Historical Data Collection
 Run collectors for all 12 whitelisted tickers (2024 onward):
 
-**Institutional Data**
-- [ ] Collect 13F filings: `python -m src.collectors.sec_collector`
-- [ ] Collect Form 4 insider transactions: `python -m src.collectors.form4_collector`
-
-**Retail Data**
-- [ ] Collect Google Trends data: `python -m src.collectors.trends_collector`
-
-**Market Data**
-- [ ] Collect price/volume data: `python -m src.collectors.price_collector`
+**Market & Retail Data**
+- [ ] Collect data for all tickers: `python collect_data.py`
 
 ### 7. Verify Data Collection
-- [ ] Check database for collected data: `python verify_data.py`
-- [ ] Verify all 12 tickers have data
+- [ ] Check console output for "COLLECTION SUMMARY"
+- [ ] Verify logs in `logs/divergence.log`
 - [ ] Verify date ranges (2024-01-01 to present)
 - [ ] Check for data gaps or anomalies
 - [ ] Review logs for errors or warnings
@@ -229,7 +220,7 @@ Choose one platform and complete:
 - [ ] Manual data refresh process documented
 - [ ] Data collection scripts tested
 - [ ] Schedule for quarterly 13F updates documented
-- [ ] Schedule for daily retail data updates documented
+- [ ] Schedule for daily price/insider data updates documented
 - [ ] Automated data refresh pipeline (Phase 2 - optional)
 
 ---
@@ -308,5 +299,5 @@ If you're just getting started, complete these items first:
 
 ---
 
-**Last Updated**: 2025-12-27
-**Version**: 1.0
+**Last Updated**: 2025-12-28
+**Version**: 1.1
