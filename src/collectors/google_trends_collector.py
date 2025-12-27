@@ -22,13 +22,11 @@ class GoogleTrendsCollector(BaseCollector):
         super().__init__(rate_limit=100)  # ~100 requests per hour
         self.logger = get_logger(__name__)
 
-        # Initialize pytrends
+        # Initialize pytrends (removed deprecated retry parameters)
         self.pytrends = TrendReq(
             hl='en-US',
             tz=360,
-            timeout=(10, 25),
-            retries=3,
-            backoff_factor=0.5
+            timeout=(10, 25)
         )
 
     def collect_historical(

@@ -29,7 +29,6 @@ Gathers all the historical data needed to show divergence patterns.
 Charts populated with data from January 2024 to now, showing:
 - When big institutions were buying or selling (from official SEC filings)
 - When retail investors were searching for stocks (from Google Trends)
-- When Reddit was buzzing about stocks (from social media)
 - Actual stock prices to see what really happened
 
 **Why It Matters:**
@@ -96,7 +95,7 @@ Automatically verifies that all collected data is accurate and complete before s
 **What You'll See:**
 - Confidence that the patterns you're seeing are based on real, verified data
 - No confusing gaps or obvious errors in the charts
-- Assurance that "MU" means Micron Technology (not random Reddit posts with the letters "mu")
+- Assurance that "MU" means Micron Technology (not random posts with the letters "mu")
 
 **Why It Matters:**
 Bad data leads to bad insights. This ensures you can trust what you're seeing.
@@ -141,7 +140,22 @@ You want to see current patterns, not historical snapshots. This keeps the dashb
 
 ---
 
-### 2.2 Pattern Analysis (Lead-Lag Correlation)
+### 2.2 Advanced Institutional Holdings (13F Inverted Search)
+
+**What It Does:**
+Correctly tracks institutional ownership by collecting 13F filings from *major investment funds* (e.g., BlackRock, Vanguard) and searching for their holdings of our 12 stocks.
+
+**Why This is Phase 2:**
+Phase 1 currently tracks SEC Form 4 (Insider Trading) which provides strong signal. Tracking *total* institutional ownership requires processing thousands of filings from *other* companies (the funds) rather than the stocks themselves, which is a complex "inverted search" data engineering task.
+
+**What You'll See:**
+- Total % of company owned by institutions
+- Top 10 institutional holders for each stock
+- Changes in ownership by major funds (e.g., "Berkshire Hathaway bought more AAPL")
+
+---
+
+### 2.3 Pattern Analysis (Lead-Lag Correlation)
 
 **What It Does:**
 Calculates whether retail sentiment changes tend to predict price movements (or vice versa) for each stock.

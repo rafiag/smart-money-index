@@ -24,8 +24,9 @@
 - **Scope:** MVP focuses on historical data visualization (2024 onward) with static dataset
 - **Stock Coverage:** 12 whitelisted tickers only (details in Section 8)
 - **Interactivity:** Ticker selection, date range filtering, data source toggles
-- **Visual Design:** Modern, minimalistic, dark theme (full specs in Section 8)
-- **Future Scope:** Real-time data integration (not part of MVP)
+- **Phase 1 (MVP):** Core dashboard with Form 4 insider data, Price, and Google Trends
+- **Phase 2:** Automated sync, Advanced 13F "Inverted Search" for institutional holdings, Lead-Lag analysis
+- **Phase 3:** Real-time data, Multi-stock scanner
 
 ---
 

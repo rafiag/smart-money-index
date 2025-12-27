@@ -10,21 +10,7 @@
 - [x] Git repository initialized
 - [x] `.gitignore` configured (exclude `.env`, `data/`, `__pycache__/`)
 
-### 2. Reddit API Configuration
-- [x] Reddit account created and email verified
-- [] Reddit app created at https://www.reddit.com/prefs/apps
-  - [ ] App type: "script" selected
-  - [ ] App name: Set (e.g., "Smart Money Divergence Index")
-  - [ ] Redirect URI: `http://localhost:8080` entered
-- [ ] Client ID copied (under "personal use script")
-- [ ] Client Secret copied (after "secret:")
-- [ ] Credentials added to `.env` file:
-  - [ ] `REDDIT_CLIENT_ID=your_actual_client_id`
-  - [ ] `REDDIT_CLIENT_SECRET=your_actual_secret`
-  - [ ] `REDDIT_USER_AGENT=SmartMoneyDivergence/1.0`
-- [ ] Reddit API tested: `python test_reddit_api.py`
-
-### 3. Database Setup
+### 2. Database Setup
 - [ ] SQLite database directory created (`data/` folder)
 - [ ] Database URL configured in `.env`:
   - [ ] Development: `DATABASE_URL=sqlite:///data/divergence.db`
@@ -37,9 +23,6 @@ Review and configure `.env` file:
 
 #### Required Settings
 - [ ] `DATABASE_URL` - Database connection string
-- [ ] `REDDIT_CLIENT_ID` - Reddit API client ID
-- [ ] `REDDIT_CLIENT_SECRET` - Reddit API secret
-- [ ] `REDDIT_USER_AGENT` - App identifier
 
 #### Optional Settings (Review Defaults)
 - [ ] `ENVIRONMENT` - development or production (default: development)
@@ -49,15 +32,9 @@ Review and configure `.env` file:
 - [ ] `CACHE_EXPIRY_HOURS` - Cache expiration time (default: 24)
 
 #### Rate Limiting (Verify Defaults)
-- [ ] `SEC_RATE_LIMIT` - SEC EDGAR requests/min (default: 60)
-- [ ] `REDDIT_RATE_LIMIT` - Reddit API requests/min (default: 60)
+- [ ] `SEC_RATE_LIMIT` - SEC EDGAR requests/min (default: 30)
 - [ ] `GOOGLE_TRENDS_RATE_LIMIT` - Google Trends requests/hour (default: 100)
 - [ ] `YAHOO_FINANCE_RATE_LIMIT` - Yahoo Finance requests/min (default: 2000)
-
-#### Reddit Configuration
-- [ ] `REDDIT_SUBREDDITS` - Subreddits to monitor (default: wallstreetbets,stocks,investing)
-- [ ] `REDDIT_MAX_POSTS_PER_DAY` - Max posts per subreddit (default: 1000)
-- [ ] `REDDIT_MIN_COMMENT_KARMA` - Minimum comment karma (default: 5)
 
 ---
 
@@ -67,7 +44,6 @@ Review and configure `.env` file:
 - [ ] Test SEC Form 13F collector: `python test_sec_collector.py`
 - [ ] Test SEC Form 4 collector: `python test_form4_collector.py`
 - [ ] Test Google Trends collector: `python test_trends_collector.py`
-- [ ] Test Reddit collector: `python test_reddit_collector.py`
 - [ ] Test Yahoo Finance collector: `python test_price_collector.py`
 
 ### 6. Initial Historical Data Collection
@@ -79,7 +55,6 @@ Run collectors for all 12 whitelisted tickers (2024 onward):
 
 **Retail Data**
 - [ ] Collect Google Trends data: `python -m src.collectors.trends_collector`
-- [ ] Collect Reddit sentiment: `python -m src.collectors.reddit_collector`
 
 **Market Data**
 - [ ] Collect price/volume data: `python -m src.collectors.price_collector`
@@ -292,13 +267,12 @@ Choose one platform and complete:
 If you're just getting started, complete these items first:
 
 1. ✅ Environment setup (Section 1)
-2. ✅ Reddit API configuration (Section 2)
-3. ✅ Database setup (Section 3)
-4. ✅ Configure `.env` file (Section 4)
-5. ✅ Test data collectors (Section 5)
-6. ✅ Collect initial data (Section 6)
-7. ✅ Run dashboard locally (Section 10)
-8. ✅ Test dashboard features (Section 11)
+2. ✅ Database setup (Section 2)
+3. ✅ Configure `.env` file (Section 3)
+4. ✅ Test data collectors (Section 4)
+5. ✅ Collect initial data (Section 5)
+6. ✅ Run dashboard locally (Section 9)
+7. ✅ Test dashboard features (Section 10)
 
 **Then** move on to production deployment if needed.
 
@@ -313,7 +287,6 @@ If you're just getting started, complete these items first:
 
 ### Testing
 - Run all tests: `pytest`
-- Run specific test: `pytest tests/unit/test_reddit_collector.py`
 - Check coverage: `pytest --cov=src tests/`
 
 ### Troubleshooting

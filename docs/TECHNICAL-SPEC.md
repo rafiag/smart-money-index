@@ -24,7 +24,7 @@ This document contains detailed implementation specifications for developers. Fo
 *   **Yahoo Finance:** No official limit, cache responses to minimize redundant calls
 
 **Data Frequency Alignment:**
-*   **13F Holdings:** Quarterly (45-day filing lag) - treat as long-term anchor
+*   **Phase 2 - 13F Holdings (Inverted Search):** Quarterly (45-day lag) - requires inverted search of fund filings
 *   **Form 4 Insider:** Event-driven (irregular) - forward-fill to daily
 *   **Reddit Sentiment:** Aggregate to daily (sum mentions, average polarity)
 *   **Google Trends:** Weekly data - interpolate to daily for visualization

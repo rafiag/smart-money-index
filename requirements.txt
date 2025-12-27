@@ -23,16 +23,10 @@ alembic>=1.13.0                 # Database migration tool
 # Data Collection APIs
 # -----------------------------------------------------------------------------
 edgartools>=2.20.0              # SEC EDGAR data (13F filings, Form 4)
-praw>=7.7.0                     # Reddit API wrapper
 pytrends>=4.9.0                 # Google Trends API (unofficial)
 yfinance>=0.2.30                # Yahoo Finance market data
 
-# -----------------------------------------------------------------------------
-# Natural Language Processing (Sentiment Analysis)
-# -----------------------------------------------------------------------------
-textblob>=0.17.0                # Simple sentiment analysis
-nltk>=3.8.0                     # Natural language toolkit
-vaderSentiment>=3.3.0           # Rule-based sentiment analyzer for social media
+
 
 # -----------------------------------------------------------------------------
 # Web Dashboard & Visualization

@@ -13,7 +13,6 @@ from src.collectors import (
     Form4Collector,
     GoogleTrendsCollector,
     PriceCollector,
-    RedditCollector,
 )
 from src.config import get_settings
 from src.database import init_db
@@ -79,22 +78,9 @@ def main():
             logger.error(f"Google Trends collection failed: {e}", exc_info=True)
             all_results['google_trends'] = {}
 
-        # 3. Collect Reddit Sentiment Data
+        # 3. Collect SEC 13F Data (Institutional Holdings)
         logger.info("\n" + "="*70)
-        logger.info("STEP 3: Collecting Reddit Sentiment Data")
-        logger.info("="*70)
-        try:
-            reddit_collector = RedditCollector()
-            reddit_results = reddit_collector.collect_all_tickers(start_date, end_date)
-            all_results['reddit_sentiment'] = reddit_results
-            logger.info(f"Reddit collection complete. Total records: {sum(reddit_results.values())}")
-        except Exception as e:
-            logger.error(f"Reddit collection failed: {e}", exc_info=True)
-            all_results['reddit_sentiment'] = {}
-
-        # 4. Collect SEC 13F Data (Institutional Holdings)
-        logger.info("\n" + "="*70)
-        logger.info("STEP 4: Collecting SEC 13F Data (Institutional Holdings)")
+        logger.info("STEP 3: Collecting SEC 13F Data (Institutional Holdings)")
         logger.info("="*70)
         try:
             form13f_collector = Form13FCollector()
@@ -105,9 +91,9 @@ def main():
             logger.error(f"13F collection failed: {e}", exc_info=True)
             all_results['institutional_holdings'] = {}
 
-        # 5. Collect SEC Form 4 Data (Insider Transactions)
+        # 4. Collect SEC Form 4 Data (Insider Transactions)
         logger.info("\n" + "="*70)
-        logger.info("STEP 5: Collecting SEC Form 4 Data (Insider Transactions)")
+        logger.info("STEP 4: Collecting SEC Form 4 Data (Insider Transactions)")
         logger.info("="*70)
         try:
             form4_collector = Form4Collector()
@@ -118,9 +104,9 @@ def main():
             logger.error(f"Form 4 collection failed: {e}", exc_info=True)
             all_results['insider_transactions'] = {}
 
-        # 6. Run Data Validation
+        # 5. Run Data Validation
         logger.info("\n" + "="*70)
-        logger.info("STEP 6: Running Data Validation")
+        logger.info("STEP 5: Running Data Validation")
         logger.info("="*70)
         try:
             validator = DataValidator()

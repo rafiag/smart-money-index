@@ -6,7 +6,7 @@ A web dashboard that visualizes the divergence between institutional "smart mone
 
 This dashboard helps identify market patterns by comparing:
 - **Institutional Data (Smart Money):** SEC filings showing what large funds are buying/selling
-- **Retail Data (Hype):** Google searches and Reddit sentiment showing retail investor interest
+- **Retail Data (Hype):** Google searches showing retail investor interest
 - **Market Data (Truth):** Actual stock prices and what really happened
 
 When institutional and retail investors move in opposite directions, it can signal important market turning points.
@@ -15,7 +15,7 @@ When institutional and retail investors move in opposite directions, it can sign
 
 ### Phase 1 (MVP) - In Progress
 - **Phase 1.1: Data Collection** ✅ Complete
-  - ✅ Historical data from 5 sources (2024-present)
+  - ✅ Historical data from 4 sources (2024-present)
   - ✅ 12 stocks tracked (Magnificent 7 + 5 Hype Stocks)
   - ✅ SQLite (dev) / PostgreSQL (prod) database
   - ✅ Automated data validation
@@ -32,8 +32,9 @@ When institutional and retail investors move in opposite directions, it can sign
   - Dark theme with educational tooltips
 
 ### Phase 2 (Planned)
-- Automated weekly data updates
-- Lead-lag correlation analysis
+- Automated weekly/quarterly data refresh
+- **Advanced 13F Collection:** "Inverted search" to track institutional ownership from fund filings
+- Statistical lead-lag correlation analysis
 - Pattern significance testing
 
 ### Phase 3 (Future Possibilities)
@@ -110,8 +111,7 @@ When institutional and retail investors move in opposite directions, it can sign
    cp .env.example .env
    ```
 
-   Edit the `.env` file and add your API credentials:
-   - Reddit API credentials (get from https://www.reddit.com/prefs/apps)
+   Edit the `.env` file and add your configuration:
    - Database URL (SQLite for development, PostgreSQL for production)
 
 6. **Verify setup:**
@@ -140,7 +140,6 @@ The Smart Money Divergence Index/
 ├── src/
 │   ├── data_collection/      # API clients for data sources
 │   │   ├── sec_client.py      # SEC EDGAR (13F, Form 4)
-│   │   ├── reddit_client.py   # Reddit sentiment
 │   │   ├── trends_client.py   # Google Trends
 │   │   └── market_client.py   # Yahoo Finance prices
 │   ├── data_processing/       # Data transformation & normalization
@@ -189,7 +188,6 @@ The Smart Money Divergence Index/
 - **Visualization:** Plotly
 - **Data Sources:**
   - SEC EDGAR via edgartools
-  - Reddit via praw
   - Google Trends via pytrends
   - Yahoo Finance via yfinance
 - **Testing:** pytest
@@ -255,36 +253,17 @@ Create a `.env` file in the project root (see `.env.example`):
 DATABASE_URL=sqlite:///data/divergence.db  # Development
 # DATABASE_URL=postgresql://user:pass@host:5432/dbname  # Production
 
-# Reddit API (required)
-REDDIT_CLIENT_ID=your_client_id_here
-REDDIT_CLIENT_SECRET=your_client_secret_here
-REDDIT_USER_AGENT=SmartMoneyDivergence/1.0
-
 # Application Settings
 LOG_LEVEL=INFO
 ENVIRONMENT=development
 DATA_START_DATE=2024-01-01
 ```
 
-### Getting Reddit API Credentials
-
-1. Go to https://www.reddit.com/prefs/apps
-2. Click "Create App" or "Create Another App"
-3. Fill in the form:
-   - **Name:** Smart Money Divergence
-   - **App type:** Script
-   - **Description:** Data collection for divergence analysis
-   - **Redirect URI:** http://localhost:8080 (required but unused)
-4. Click "Create app"
-5. Copy the **client ID** (under the app name) and **secret**
-6. Add them to your `.env` file
-
 ## Data Sources & Rate Limits
 
 | Source | Data Type | Frequency | Rate Limit | Authentication |
 |--------|-----------|-----------|------------|----------------|
 | SEC EDGAR | Institutional holdings, insider trades | Quarterly/Event-driven | ~1 req/sec | None |
-| Reddit | Sentiment, mentions | Daily aggregation | 60 req/min | OAuth (required) |
 | Google Trends | Search interest | Weekly | ~100 req/hour | None |
 | Yahoo Finance | Price, volume | Daily | Unlimited | None |
 
@@ -314,7 +293,7 @@ Track Phase 1 MVP completion:
 
 - [x] **Phase 1.1: Data Collection** ✅ Complete
   - [x] Database setup (SQLite & PostgreSQL support)
-  - [x] Data collection pipeline for all 5 sources
+  - [x] Data collection pipeline for 4 sources (Price, Google Trends, SEC 13F, SEC Form 4)
   - [x] Data quality validation
   - [x] Comprehensive test suite
   - [x] Full documentation
@@ -331,9 +310,6 @@ Track Phase 1 MVP completion:
 
 **Issue:** `ModuleNotFoundError` when running scripts
 - **Solution:** Ensure virtual environment is activated and dependencies are installed
-
-**Issue:** Reddit API authentication fails
-- **Solution:** Verify credentials in `.env` file are correct
 
 **Issue:** Database connection error
 - **Solution:** Check `DATABASE_URL` in `.env` file and ensure database exists
