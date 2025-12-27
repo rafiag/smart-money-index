@@ -130,48 +130,69 @@ class Form13FCollector(BaseCollector):
                         if self.rate_limiter:
                             self.rate_limiter.wait_if_needed()
 
-                        # Extract holdings data
-                        # Note: This is simplified - real implementation would parse XML
-                        # For MVP, we'll use aggregated data from the filing
+                        # Extract holdings data (13F filings contain a table of all holdings)
                         quarter_end = filing.period_of_report
 
-                        # Parse holdings from filing (simplified)
                         try:
                             # Use retry decorator for network resilience
                             @retry_on_network_error(max_retries=3, initial_delay=2)
-                            def fetch_filing_data():
+                            def fetch_thirteenf_obj():
                                 return filing.obj()
                             
-                            holdings_data = fetch_filing_data()  # Get filing object
-
-                            # Extract total shares and value
-                            # This is a simplified approach - production would parse XML properly
+                            thirteenf = fetch_thirteenf_obj()
+                            
+                            if thirteenf is None or not hasattr(thirteenf, 'holdings'):
+                                self.logger.debug(f"No holdings data in 13F for {symbol} on {filing_date}")
+                                continue
+                            
+                            # The edgar library returns holdings as a Pandas DataFrame
+                            df_holdings = thirteenf.holdings
+                            
+                            if df_holdings is None or df_holdings.empty:
+                                self.logger.debug(f"Empty holdings DataFrame in 13F for {symbol} on {filing_date}")
+                                continue
+                            
+                            # 13F filings use CUSIPs and Issuer Names, not always tickers.
+                            # For operating companies (uncommon), we search for their own name or symbol
+                            # in the holdings of their own 13F filing.
                             shares_held = 0
                             market_value = 0.0
-
-                            # Try to get summary data
-                            if hasattr(holdings_data, 'holdings'):
-                                for holding in holdings_data.holdings:
-                                    if holding.get('ticker', '').upper() == symbol:
-                                        shares_held = int(holding.get('shares', 0))
-                                        market_value = float(holding.get('value', 0))
-                                        break
-
-                            holding = InstitutionalHolding(
-                                ticker_id=ticker_obj.ticker_id,
-                                filing_date=filing_date,
-                                quarter_end=quarter_end,
-                                shares_held=shares_held if shares_held > 0 else None,
-                                market_value=market_value if market_value > 0 else None,
-                                ownership_percent=None  # Calculate later if needed
-                            )
-                            session.add(holding)
-                            session.flush()
-                            records_inserted += 1
+                            
+                            # Search for the symbol in the DataFrame
+                            # Case-insensitive search in issuer name or ticker-like columns if they exist
+                            search_term = symbol.upper()
+                            
+                            # Standard columns in edgar library 13F DataFrame:
+                            # ['nameOfIssuer', 'titleOfClass', 'cusip', 'value', 'shrsOrPrnAmt', ...]
+                            
+                            # Try name match as first heuristic
+                            mask = df_holdings['nameOfIssuer'].str.contains(search_term, case=False, na=False)
+                            matches = df_holdings[mask]
+                            
+                            if not matches.empty:
+                                # Aggregate if multiple matches found
+                                shares_held = int(matches['shrsOrPrnAmt'].sum())
+                                # Value is reported in thousands in 13F
+                                market_value = float(matches['value'].sum()) * 1000.0
+                            
+                            if shares_held > 0 or market_value > 0:
+                                holding_record = InstitutionalHolding(
+                                    ticker_id=ticker_obj.ticker_id,
+                                    filing_date=filing_date,
+                                    quarter_end=quarter_end,
+                                    shares_held=shares_held if shares_held > 0 else None,
+                                    market_value=market_value if market_value > 0 else None,
+                                    ownership_percent=None  # Calculation requires total shares outstanding
+                                )
+                                session.add(holding_record)
+                                session.flush()
+                                records_inserted += 1
+                            else:
+                                self.logger.debug(f"No match for {symbol} found in holdings of 13F filed by {symbol}")
 
                         except Exception as parse_error:
                             self.logger.warning(
-                                f"Could not parse 13F filing for {symbol} on {filing_date}: {parse_error}"
+                                f"Could not parse 13F holdings for {symbol} on {filing_date}: {parse_error}"
                             )
                             continue
 

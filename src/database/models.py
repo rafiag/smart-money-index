@@ -41,9 +41,6 @@ class Ticker(Base):
     google_trends = relationship(
         "GoogleTrend", back_populates="ticker", cascade="all, delete-orphan"
     )
-    reddit_sentiments = relationship(
-        "RedditSentiment", back_populates="ticker", cascade="all, delete-orphan"
-    )
     z_scores = relationship("ZScore", back_populates="ticker", cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -143,27 +140,6 @@ class GoogleTrend(Base):
         return f"<GoogleTrend(ticker_id={self.ticker_id}, date={self.date}, interest={self.search_interest})>"
 
 
-class RedditSentiment(Base):
-    """Reddit sentiment analysis data"""
-
-    __tablename__ = "reddit_sentiment"
-    __table_args__ = (
-        UniqueConstraint("ticker_id", "date", name="uq_sentiment_ticker_date"),
-        Index("idx_sentiment_ticker_date", "ticker_id", "date"),
-    )
-
-    sentiment_id = Column(Integer, primary_key=True, autoincrement=True)
-    ticker_id = Column(Integer, ForeignKey("tickers.ticker_id"), nullable=False)
-    date = Column(Date, nullable=False)
-    mention_count = Column(Integer)
-    sentiment_score = Column(DECIMAL(3, 2))  # -1 to +1 scale
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    # Relationships
-    ticker = relationship("Ticker", back_populates="reddit_sentiments")
-
-    def __repr__(self):
-        return f"<RedditSentiment(ticker_id={self.ticker_id}, date={self.date}, score={self.sentiment_score})>"
 
 
 class ZScore(Base):
@@ -181,7 +157,6 @@ class ZScore(Base):
     price_z = Column(DECIMAL(6, 3))
     institutional_z = Column(DECIMAL(6, 3))
     retail_search_z = Column(DECIMAL(6, 3))
-    retail_sentiment_z = Column(DECIMAL(6, 3))
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships

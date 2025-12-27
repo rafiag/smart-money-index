@@ -13,7 +13,6 @@ from src.database import (
     InsiderTransaction,
     InstitutionalHolding,
     Price,
-    RedditSentiment,
     Ticker,
     get_session,
 )
@@ -342,49 +341,6 @@ class MockDataGenerator:
 
         return trends
 
-    def _generate_reddit_sentiment(self, symbol: str) -> List[Dict]:
-        """
-        Generate Reddit sentiment data.
-
-        Simulates daily mentions and sentiment scores.
-        """
-        profile = self.stock_profiles[symbol]
-        retail_interest = profile["retail_interest"]
-
-        sentiments = []
-        base_mentions = int(100 * retail_interest)
-
-        for date in self.dates:
-            # Skip weekends (less Reddit activity)
-            if date.weekday() >= 5:
-                mentions = int(base_mentions * 0.3)
-            else:
-                mentions = base_mentions + random.randint(-20, 30)
-
-            # Occasional viral posts
-            if random.random() < 0.03:  # 3% chance
-                mentions = int(mentions * random.uniform(3.0, 10.0))
-
-            # Sentiment score (-1 to +1)
-            # Correlate with trend but add noise
-            base_sentiment = {
-                "bullish": 0.3,
-                "bearish": -0.2,
-                "neutral": 0.0,
-            }[profile["trend"]]
-
-            sentiment_score = base_sentiment + random.gauss(0, 0.3)
-            sentiment_score = max(-1.0, min(1.0, sentiment_score))
-
-            sentiments.append(
-                {
-                    "date": date.date(),
-                    "mention_count": mentions,
-                    "sentiment_score": round(sentiment_score, 2),
-                }
-            )
-
-        return sentiments
 
     def generate_all_mock_data(self) -> None:
         """Generate and insert mock data for all tickers into database"""
@@ -445,56 +401,11 @@ class MockDataGenerator:
                     f"  ✓ Generated {len(trends_data)} Google Trends records"
                 )
 
-                # Generate Reddit sentiment
-                reddit_data = self._generate_reddit_sentiment(symbol)
-                for data in reddit_data:
-                    sentiment = RedditSentiment(ticker_id=ticker_id, **data)
-                    session.add(sentiment)
-                self.logger.info(
-                    f"  ✓ Generated {len(reddit_data)} Reddit sentiment records"
-                )
 
                 session.commit()
 
         self.logger.info("✓ Mock data generation complete!")
 
-    def generate_reddit_only(self) -> None:
-        """Generate and insert ONLY mock Reddit sentiment data into database"""
-
-        self.logger.info(
-            f"Generating mock Reddit data from {self.start_date.date()} to {self.end_date.date()}"
-        )
-
-        with get_session() as session:
-            for symbol in settings.WHITELISTED_TICKERS:
-                self.logger.info(f"Generating mock Reddit data for {symbol}...")
-
-                # Get or create ticker
-                ticker = session.query(Ticker).filter_by(symbol=symbol).first()
-                if not ticker:
-                    ticker = Ticker(
-                        symbol=symbol,
-                        company_name=settings.TICKER_COMPANY_MAP.get(
-                            symbol, f"{symbol} Corporation"
-                        ),
-                    )
-                    session.add(ticker)
-                    session.flush()
-
-                ticker_id = ticker.ticker_id
-
-                # Generate Reddit sentiment only
-                reddit_data = self._generate_reddit_sentiment(symbol)
-                for data in reddit_data:
-                    sentiment = RedditSentiment(ticker_id=ticker_id, **data)
-                    session.add(sentiment)
-                self.logger.info(
-                    f"  ✓ Generated {len(reddit_data)} Reddit sentiment records"
-                )
-
-                session.commit()
-
-        self.logger.info("✓ Mock Reddit data generation complete!")
 
     def clear_all_mock_data(self) -> None:
         """Clear all mock data from database (use when switching to real data)"""
@@ -506,7 +417,6 @@ class MockDataGenerator:
             session.query(InstitutionalHolding).delete()
             session.query(InsiderTransaction).delete()
             session.query(GoogleTrend).delete()
-            session.query(RedditSentiment).delete()
             session.commit()
 
         self.logger.info("✓ All mock data cleared")

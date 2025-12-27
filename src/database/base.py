@@ -89,7 +89,6 @@ def init_db() -> None:
         InsiderTransaction,
         InstitutionalHolding,
         Price,
-        RedditSentiment,
         Ticker,
         ZScore,
     )

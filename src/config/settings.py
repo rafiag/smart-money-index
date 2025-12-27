@@ -38,23 +38,9 @@ class Settings:
     CACHE_EXPIRY_HOURS: int = int(os.getenv("CACHE_EXPIRY_HOURS", "24"))
 
     # API Rate limits (requests per minute)
-    SEC_RATE_LIMIT: int = int(os.getenv("SEC_RATE_LIMIT", "60"))
-    REDDIT_RATE_LIMIT: int = int(os.getenv("REDDIT_RATE_LIMIT", "60"))
+    SEC_RATE_LIMIT: int = int(os.getenv("SEC_RATE_LIMIT", "30"))
     GOOGLE_TRENDS_RATE_LIMIT: int = int(os.getenv("GOOGLE_TRENDS_RATE_LIMIT", "100"))
     YAHOO_FINANCE_RATE_LIMIT: int = int(os.getenv("YAHOO_FINANCE_RATE_LIMIT", "2000"))
-
-    # Reddit API credentials
-    REDDIT_CLIENT_ID: str = os.getenv("REDDIT_CLIENT_ID", "")
-    REDDIT_CLIENT_SECRET: str = os.getenv("REDDIT_CLIENT_SECRET", "")
-    REDDIT_USER_AGENT: str = os.getenv("REDDIT_USER_AGENT", "SmartMoneyDivergence/1.0")
-
-    # Reddit scraping configuration
-    REDDIT_SUBREDDITS: List[str] = os.getenv(
-        "REDDIT_SUBREDDITS",
-        "wallstreetbets,stocks,investing"
-    ).split(",")
-    REDDIT_MAX_POSTS_PER_DAY: int = int(os.getenv("REDDIT_MAX_POSTS_PER_DAY", "1000"))
-    REDDIT_MIN_COMMENT_KARMA: int = int(os.getenv("REDDIT_MIN_COMMENT_KARMA", "5"))
 
     # Data processing settings
     ZSCORE_SHORT_WINDOW: int = int(os.getenv("ZSCORE_SHORT_WINDOW", "30"))
@@ -122,13 +108,6 @@ class Settings:
     def validate(self) -> None:
         """Validate critical settings"""
         errors = []
-
-        # Validate Reddit credentials if needed
-        if not self.REDDIT_CLIENT_ID or self.REDDIT_CLIENT_ID == "your_reddit_client_id_here":
-            errors.append("REDDIT_CLIENT_ID is not set in .env file")
-
-        if not self.REDDIT_CLIENT_SECRET or self.REDDIT_CLIENT_SECRET == "your_reddit_client_secret_here":
-            errors.append("REDDIT_CLIENT_SECRET is not set in .env file")
 
         # Validate database URL
         if not self.DATABASE_URL:

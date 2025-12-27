@@ -12,7 +12,6 @@ from src.database import (
     InsiderTransaction,
     InstitutionalHolding,
     Price,
-    RedditSentiment,
     Ticker,
     get_session,
 )
@@ -53,7 +52,6 @@ class DataValidator:
         self.validate_institutional_data()
         self.validate_insider_data()
         self.validate_google_trends()
-        self.validate_reddit_sentiment()
         self.validate_completeness()
 
         # Generate report
@@ -266,51 +264,6 @@ class DataValidator:
                                 "value": trend.search_interest
                             })
 
-    def validate_reddit_sentiment(self) -> None:
-        """Validate Reddit sentiment data"""
-        with get_session() as session:
-            for symbol in self.settings.WHITELISTED_TICKERS:
-                ticker = session.query(Ticker).filter(Ticker.symbol == symbol).first()
-                if not ticker:
-                    continue
-
-                sentiments = session.query(RedditSentiment).filter(
-                    RedditSentiment.ticker_id == ticker.ticker_id
-                ).all()
-
-                if not sentiments:
-                    self.issues.append({
-                        "severity": "WARNING",
-                        "category": "MISSING_DATA",
-                        "message": f"No Reddit sentiment data for {symbol}",
-                        "ticker": symbol
-                    })
-                    continue
-
-                # Validate sentiment score is in -1 to +1 range
-                for sent in sentiments:
-                    if sent.sentiment_score is not None:
-                        if not (-1 <= float(sent.sentiment_score) <= 1):
-                            self.issues.append({
-                                "severity": "ERROR",
-                                "category": "INVALID_VALUE",
-                                "message": f"{symbol} has invalid sentiment score",
-                                "ticker": symbol,
-                                "date": sent.date,
-                                "value": float(sent.sentiment_score)
-                            })
-
-                    # Check for extremely high mention counts (potential outliers)
-                    if sent.mention_count:
-                        if sent.mention_count > 10000:
-                            self.issues.append({
-                                "severity": "WARNING",
-                                "category": "OUTLIERS",
-                                "message": f"{symbol} has very high mention count",
-                                "ticker": symbol,
-                                "date": sent.date,
-                                "value": sent.mention_count
-                            })
 
     def validate_completeness(self) -> None:
         """Check that all tickers have data for expected date ranges"""
