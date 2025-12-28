@@ -55,9 +55,9 @@ This document contains detailed implementation specifications for developers. Fo
 *   90-day for long-term trends
 
 **Outlier Detection:**
-*   Use IQR method (Interquartile Range) to flag outliers before normalization
-*   Outliers: Values > Q3 + 1.5×IQR or < Q1 - 1.5×IQR
-*   Treatment: Winsorization (cap at 99th percentile) rather than removal
+*   **Strategy:** Apply hard clipping (Winsorization) to the input data before Z-score calculation.
+*   **Thresholds:** Cap values at 1st and 99th percentiles (rolling or global).
+*   **Rationale:** Prevents extreme "meme stock" volality from flattening the entire history's Z-scores.
 
 **Robust Statistics Alternative:**
 *   For highly skewed data, use Median Absolute Deviation (MAD) instead of standard deviation
@@ -66,7 +66,10 @@ This document contains detailed implementation specifications for developers. Fo
 **Edge Case Handling:**
 *   **Insufficient Data:** Require minimum 14 days of data before calculating Z-scores
 *   **Zero Variance:** If σ = 0 (flat period), return Z = 0 instead of division error
-*   **Missing Values:** Forward-fill up to 3 days, then mark as null (do not interpolate long gaps)
+*   **Missing Values:** 
+    *   Forward-fill up to 7 days for Weekly Trends (allow 1 week gap)
+    *   Forward-fill up to 95 days for Quarterly Holdings (allow 1 quarter gap)
+    *   Do not interpolate across large gaps > limit.
 
 **Testing Requirements:**
 *   Unit tests for Z-score calculation accuracy (compare to manual calculations)
