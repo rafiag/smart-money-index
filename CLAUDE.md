@@ -27,7 +27,15 @@
 - **Phase 1 (MVP):** Core dashboard with Form 4 insider data, Price, and Google Trends
 - **Phase 2:** Automated sync, Advanced 13F "Inverted Search" for institutional holdings, Lead-Lag analysis
 - **Phase 3:** Real-time data, Multi-stock scanner
+- **Phase 3:** Real-time data, Multi-stock scanner
 - **Development Environment:** ALL development, testing, and data collection MUST be performed within the Docker environment. Local `venv` is for IDE indexing only.
+
+### Key Commands
+- **Run Dashboard:** `python -m streamlit run src/dashboard/app.py`
+- **Run Tests:** `pytest`
+- **Collect Data:** `python scripts/collect_data.py`
+- **Update Z-Scores:** `python scripts/update_zscores.py`
+- **Hybrid Data Setup:** `python scripts/generate_holdings_only.py` (Use this after `collect_data.py` to fill missing 13F data)
 
 ---
 

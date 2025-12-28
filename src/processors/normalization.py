@@ -71,17 +71,19 @@ class ZScoreNormalizer:
         df['price_z'] = price_z
         
         if not trends_z.empty:
-            trends_renamed = trends_z.rename('search_z')
-            df = df.join(trends_renamed, how='left')
-            df['search_z'] = df['search_z'].ffill(limit=self.FFILL_LIMIT_TRENDS)
+            # Reindex to daily price dates using forward fill
+            df['search_z'] = trends_z.reindex(df.index, method='ffill', limit=self.FFILL_LIMIT_TRENDS)
         else:
             df['search_z'] = np.nan
             
+        logger.info(f"Holdings Z (Raw) Count: {len(holdings_z)}")
         if not holdings_z.empty:
-            holdings_renamed = holdings_z.rename('holdings_z')
-            df = df.join(holdings_renamed, how='left')
-            df['holdings_z'] = df['holdings_z'].ffill(limit=self.FFILL_LIMIT_HOLDINGS)
+            logger.info(f"Holdings Z Head:\n{holdings_z.head()}")
+            # Reindex to daily price dates using forward fill
+            df['holdings_z'] = holdings_z.reindex(df.index, method='ffill', limit=self.FFILL_LIMIT_HOLDINGS)
+            logger.info(f"Holdings Z (Merged) Non-Null: {df['holdings_z'].count()}")
         else:
+            logger.warning("Holdings Z is empty!")
             df['holdings_z'] = np.nan
         
         # 4. Save to Database
