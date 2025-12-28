@@ -51,8 +51,11 @@ This document contains detailed implementation specifications for developers. Fo
 **Statistical Implementation Details:**
 
 **Rolling Window:**
-*   30-day lookback for short-term signals
-*   90-day for long-term trends
+**Rolling Window:**
+*   30-day lookback for Price (Daily)
+*   4-week lookback for Trends (Weekly)
+*   4-quarter (1-year) lookback for Holdings (Quarterly)
+*   *Rationale:* Frequency-specific windows prevent statistical artifacts from upsampling.
 
 **Outlier Detection:**
 *   **Strategy:** Apply hard clipping (Winsorization) to the input data before Z-score calculation.
@@ -128,12 +131,12 @@ This document contains detailed implementation specifications for developers. Fo
 ## Phase 1 Definition of Done
 
 **Phase 1 is complete when:**
-- [ ] All 12 tickers have complete 2024+ data in database
-- [ ] Database works correctly in both SQLite (dev) and PostgreSQL (prod) modes
-- [ ] Z-scores calculated correctly (validated against manual calculations for sample data)
+- [x] All 12 tickers have complete 2024+ data in database
+- [x] Database works correctly in both SQLite (dev) and PostgreSQL (prod) modes
+- [x] Z-scores calculated correctly (validated against manual calculations for sample data)
 - [ ] Dashboard loads in <2 seconds for any ticker/date range combination
-- [ ] All unit tests passing (>90% code coverage)
-- [ ] All integration tests passing (mocked API responses)
+- [x] All unit tests passing (>90% code coverage)
+- [x] All integration tests passing (mocked API responses)
 - [ ] End-to-end user workflow completes without errors
 - [ ] Data quality validation reports show <5% flagged issues
 - [ ] Educational tooltips reviewed for accuracy by finance-knowledgeable reviewer

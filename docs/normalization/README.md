@@ -21,9 +21,10 @@ with get_session() as session:
 
 ## Key Features
 
-- **Multi-Source Alignment**: Merges Daily (Prices), Weekly (Trends), and Quarterly (Holdings) data.
-- **Robust Statistics**: Uses a rolling 30-day window to calculate Mean and Standard Deviation.
-- **Outlier Handling**: Automatically handles gaps and zero-variance periods.
+- **Frequency-Specific Normalization**: Uses context-aware windows (30-day Price, 4-week Trends, 4-quarter Holdings) to prevent statistical artifacts.
+- **Robust Statistics**: Automatically applies Winsorization (outlier capping) and Median Absolute Deviation (MAD) for skewed data.
+- **Data Alignment**: Merges multi-frequency data onto a shared daily timeline with intelligent forward-filling.
+- **Validation**: Automatically logs warnings for suspicious Z-scores (|Z| > 5) or high missing data percentages.
 
 ## Optimization Notes
 > [!NOTE]

@@ -36,7 +36,7 @@ This is the foundation - without complete data, the patterns won't be reliable.
 
 ---
 
-### 1.2 Making Everything Comparable (Normalization)
+### 1.2 Making Everything Comparable (Normalization) **(Status: COMPLETED)**
 
 **What It Does:**
 Converts all different types of data (dollar amounts, search volume, social media mentions) into a common scale so you can compare them directly.

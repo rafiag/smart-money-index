@@ -62,10 +62,11 @@ $$Z = \frac{(x - \mu)}{\sigma}$$
 This allows the dashboard to show how many standard deviations "above normal" a specific metric is at any given time.
 
 **Implementation Details:**
-* Rolling windows: 30-day for short-term signals, 90-day for long-term trends
-* Outlier detection using IQR (Interquartile Range) method
-* Robust statistics (Median Absolute Deviation) for highly skewed data
-* Edge case handling for insufficient data, zero variance, and missing values
+* Rolling windows: Frequency-specific (30-day Price, 4-week Trends, 4-quarter Holdings)
+* Outlier detection: Winsorization (cap at 1st/99th percentiles)
+* Robust statistics: Median Absolute Deviation (MAD) for highly skewed data
+* Edge case handling: 14-day minimum, zero variance suppression, frequency-aligned forward-filling
+* **Status:** Phase 1.2 Completed. Engine implemented in `src/processors/normalization.py`.
 
 ### **Phase 2: Lead-Lag Correlation Analysis**
 After the MVP is complete and validated, the system will add statistical correlation analysis to calculate: *"Does a spike in retail sentiment lead to a price change within 5 days?"*

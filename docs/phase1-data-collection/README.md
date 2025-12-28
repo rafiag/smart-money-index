@@ -204,11 +204,12 @@ pytest tests/integration/
 **After data collection:**
 1. Review validation report for any issues
 2. Explore database with SQL queries
-3. **Phase 1.2:** Build Z-score normalization engine
-4. **Phase 1.3:** Build interactive dashboard
+3. **Phase 1.2: Build Z-score normalization engine** ✅ Complete
+4. **Phase 1.3: Build interactive dashboard** 🔜 Upcoming (Next Step)
 
 ## Documentation
 
+- **[Normalization Engine (Phase 1.2)](../normalization/README.md)** - Logic and methodology
 - **[DATA_COLLECTION.md](DATA_COLLECTION.md)** - Complete technical reference
 - **[../../TECHNICAL-SPEC.md](../TECHNICAL-SPEC.md)** - Full technical specification
 - **[../../FEATURE-PLAN.md](../FEATURE-PLAN.md)** - User-facing features

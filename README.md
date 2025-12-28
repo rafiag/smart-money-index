@@ -20,10 +20,11 @@ When institutional and retail investors move in opposite directions, it can sign
   - ✅ SQLite (dev) / PostgreSQL (prod) database
   - ✅ Automated data validation
   - ✅ Rate limiting & error handling
-- **Phase 1.2: Z-Score Engine** 🔜 Next
-  - Z-score normalization for comparing metrics
-  - Rolling window calculations
-  - Outlier handling
+- **Phase 1.2: Z-Score Engine** ✅ Complete
+  - ✅ Frequency-specific normalization (Daily/Weekly/Quarterly)
+  - ✅ Robust statistics (MAD fallback for skewed data)
+  - ✅ Outlier handling (Winsorization)
+  - ✅ Validation logging (|Z| > 5)
 - **Phase 1.3: Interactive Dashboard** 🔜 Upcoming
   - Streamlit web interface
   - Plotly visualizations
@@ -264,6 +265,10 @@ This is a portfolio project. Contributions are welcome! Please:
 - **[README](docs/phase1-data-collection/README.md)** - Quick start & overview
 - **[DATA_COLLECTION.md](docs/phase1-data-collection/DATA_COLLECTION.md)** - Complete technical reference
 
+### Phase 1.2 Normalization (✅ Complete)
+- **[README](docs/normalization/README.md)** - Normalization logic & examples
+- **[NORMALIZATION.md](docs/normalization/NORMALIZATION.md)** - Statistical methodology detail
+
 ## Phase 1 Progress
 
 Track Phase 1 MVP completion:
@@ -274,10 +279,12 @@ Track Phase 1 MVP completion:
   - [x] Data quality validation
   - [x] Comprehensive test suite
   - [x] Full documentation
-- [ ] **Phase 1.2: Z-Score Engine** 🔜 Next
-  - [ ] Z-score normalization engine
-  - [ ] Rolling window calculations
-  - [ ] Outlier handling
+- [x] **Phase 1.2: Z-Score Engine** ✅ Complete
+  - [x] Z-score normalization engine
+  - [x] Rolling window calculations (Frequency-Specific)
+  - [x] Outlier handling (Winsorization)
+  - [x] Robust statistics (MAD)
+  - [x] Comprehensive test suite & documentation
 - [ ] **Phase 1.3: Dashboard** 🔜 Upcoming
   - [ ] Interactive Streamlit dashboard
   - [ ] Plotly visualizations

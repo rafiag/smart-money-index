@@ -292,7 +292,6 @@ class ZScore(Base):
     price_z: Decimal                  # Price Z-score
     institutional_z: Decimal          # Institutional Z-score
     retail_search_z: Decimal          # Search Z-score
-    retail_sentiment_z: Decimal       # Sentiment Z-score
     created_at: datetime
 
 # Unique constraint: (ticker_id, date)
@@ -404,11 +403,14 @@ print(settings.WHITELISTED_TICKERS)
 - `YAHOO_FINANCE_RATE_LIMIT` - 2000
 
 **Data Processing:**
-- `ZSCORE_SHORT_WINDOW` - 30 days
-- `ZSCORE_LONG_WINDOW` - 90 days
-- `MIN_DATA_POINTS_FOR_ZSCORE` - 14 days
-- `MAX_FORWARD_FILL_DAYS` - 3 days
-- `IQR_MULTIPLIER` - 1.5 (outlier detection)
+- `ZSCORE_WINDOW_PRICE` - 30 days
+- `ZSCORE_WINDOW_TRENDS` - 4 weeks
+- `ZSCORE_WINDOW_HOLDINGS` - 4 quarters
+- `MIN_PERIODS_PRICE` - 14 days
+- `FFILL_LIMIT_TRENDS` - 7 days
+- `FFILL_LIMIT_HOLDINGS` - 95 days
+- `WINSOR_LOWER / UPPER` - 1% / 99% (outlier handling)
+- `SKEW_THRESHOLD` - 1.5 (MAD trigger)
 
 **Methods:**
 
