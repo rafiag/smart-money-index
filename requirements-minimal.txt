@@ -18,7 +18,6 @@ plotly
 
 # Data sources (install one at a time if issues occur)
 yfinance
-praw
 pytrends
 edgartools
 

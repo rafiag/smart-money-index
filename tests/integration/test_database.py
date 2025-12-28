@@ -15,7 +15,6 @@ from src.database import (
     InsiderTransaction,
     InstitutionalHolding,
     Price,
-    RedditSentiment,
     Ticker,
     ZScore,
 )
@@ -173,26 +172,6 @@ class TestDatabaseModels:
 
         assert result.search_interest == 75
 
-    def test_reddit_sentiment(self, test_db):
-        """Test creating Reddit sentiment data"""
-        ticker = Ticker(symbol="HOOD", company_name="Robinhood")
-        test_db.add(ticker)
-        test_db.flush()
-
-        sentiment = RedditSentiment(
-            ticker_id=ticker.ticker_id,
-            date=date(2024, 2, 1),
-            mention_count=250,
-            sentiment_score=Decimal("0.65")
-        )
-        test_db.add(sentiment)
-        test_db.commit()
-
-        result = test_db.query(RedditSentiment).first()
-
-        assert result.mention_count == 250
-        assert result.sentiment_score == Decimal("0.65")
-
     def test_z_score(self, test_db):
         """Test creating Z-score data"""
         ticker = Ticker(symbol="SMCI", company_name="Super Micro Computer")
@@ -204,8 +183,7 @@ class TestDatabaseModels:
             date=date(2024, 3, 1),
             price_z=Decimal("1.250"),
             institutional_z=Decimal("-0.500"),
-            retail_search_z=Decimal("2.100"),
-            retail_sentiment_z=Decimal("1.800")
+            retail_search_z=Decimal("2.100")
         )
         test_db.add(zscore)
         test_db.commit()

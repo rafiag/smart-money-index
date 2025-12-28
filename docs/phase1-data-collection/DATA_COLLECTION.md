@@ -137,52 +137,6 @@ count = collector.collect_historical("AAPL", datetime(2024, 1, 1))
 
 ---
 
-### RedditCollector
-
-**Location:** `src/collectors/reddit_collector.py`
-
-Collects sentiment data from Reddit.
-
-**Usage:**
-```python
-from src.collectors import RedditCollector
-from datetime import datetime
-
-collector = RedditCollector()
-count = collector.collect_historical("AAPL", datetime(2024, 1, 1))
-```
-
-**Data Collected:**
-- Daily mention count
-- Average sentiment score (-1 to +1)
-- Subreddits: r/wallstreetbets, r/stocks, r/investing
-
-**Authentication:** Requires Reddit API credentials in `.env`:
-```
-REDDIT_CLIENT_ID=your_id
-REDDIT_CLIENT_SECRET=your_secret
-```
-
-**Rate Limit:** 60 req/min (OAuth)
-
-**Methods:**
-
-**extract_tickers()**
-```python
-def extract_tickers(text: str) -> Set[str]
-```
-Extract ticker symbols from text. Matches `$AAPL` or `AAPL`.
-
-**analyze_sentiment()**
-```python
-def analyze_sentiment(text: str) -> float
-```
-Analyze sentiment using TextBlob. Returns polarity (-1 to +1).
-
-**Library:** `praw`, `textblob`
-
----
-
 ### Form13FCollector
 
 **Location:** `src/collectors/sec_collector.py`
@@ -388,7 +342,6 @@ validator.print_report(report)
 - `validate_institutional_data()` - 13F validation
 - `validate_insider_data()` - Form 4 validation
 - `validate_google_trends()` - Trends validation (0-100 range)
-- `validate_reddit_sentiment()` - Sentiment validation (-1 to +1 range)
 - `validate_completeness()` - Coverage checks (95% threshold)
 
 **Report Structure:**
@@ -445,14 +398,8 @@ print(settings.WHITELISTED_TICKERS)
 - `WHITELISTED_TICKERS` - List of 12 symbols
 - `TICKER_COMPANY_MAP` - Symbol → company name mapping
 
-**API Credentials:**
-- `REDDIT_CLIENT_ID` - Reddit OAuth client ID
-- `REDDIT_CLIENT_SECRET` - Reddit OAuth secret
-- `REDDIT_USER_AGENT` - User agent string
-
 **Rate Limits (requests per minute):**
 - `SEC_RATE_LIMIT` - 60
-- `REDDIT_RATE_LIMIT` - 60
 - `GOOGLE_TRENDS_RATE_LIMIT` - 100
 - `YAHOO_FINANCE_RATE_LIMIT` - 2000
 
@@ -471,7 +418,6 @@ settings.validate()  # Raises ValueError if invalid
 ```
 
 Checks:
-- Reddit credentials are set
 - Database URL is configured
 
 **Properties:**
@@ -492,7 +438,6 @@ from datetime import datetime
 from src.collectors import (
     PriceCollector,
     GoogleTrendsCollector,
-    RedditCollector,
     Form13FCollector,
     Form4Collector
 )
@@ -510,7 +455,6 @@ start_date = datetime(2024, 1, 1)
 collectors = [
     PriceCollector(),
     GoogleTrendsCollector(),
-    RedditCollector(),
     Form13FCollector(),
     Form4Collector()
 ]
@@ -756,11 +700,10 @@ python scripts/migrate_to_postgres.py
 **Expected Performance:**
 - Price collection: ~30 seconds for all 12 tickers
 - Google Trends: ~2-3 minutes (rate limited)
-- Reddit: ~5-7 minutes (searches + sentiment)
 - SEC 13F: ~1-2 minutes (fewer records)
 - SEC Form 4: ~1-2 minutes
 
-**Total:** ~10-15 minutes for complete historical collection
+**Total:** ~5-8 minutes for complete historical collection
 
 **Database Size:**
 - ~148 KB for test data (1 ticker, 499 days)

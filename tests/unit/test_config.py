@@ -96,37 +96,12 @@ class TestSettings:
 class TestSettingsValidation:
     """Test settings validation"""
 
-    def test_validation_fails_without_reddit_credentials(self, monkeypatch):
-        """Test that validation fails with missing Reddit credentials"""
-        monkeypatch.setenv("REDDIT_CLIENT_ID", "your_reddit_client_id_here")
-        monkeypatch.setenv("REDDIT_CLIENT_SECRET", "your_reddit_client_secret_here")
-
+    def test_validation_basic(self):
+        """Test basic settings validation"""
         settings = Settings()
 
-        with pytest.raises(ValueError, match="Configuration validation failed"):
-            settings.validate()
-
-    def test_validation_succeeds_with_valid_credentials(self, monkeypatch):
-        """Test that validation passes with valid credentials"""
-        # Must set env vars before importing/creating Settings
-        import os
-        monkeypatch.setattr(os, "environ", {
-            **os.environ,
-            "REDDIT_CLIENT_ID": "valid_client_id",
-            "REDDIT_CLIENT_SECRET": "valid_client_secret",
-            "DATABASE_URL": "sqlite:///test.db"
-        })
-
-        # Force reload of environment variables
-        from importlib import reload
-        from src.config import settings as settings_module
-        reload(settings_module)
-
-        # Create new settings instance with updated env
-        settings = settings_module.Settings()
-
-        # Should not raise
+        # Should not raise with default settings
         try:
             settings.validate()
         except ValueError as e:
-            pytest.fail(f"Validation should pass with valid credentials: {e}")
+            pytest.fail(f"Validation should pass with default settings: {e}")

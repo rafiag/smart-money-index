@@ -17,12 +17,6 @@ source venv/bin/activate  # Mac/Linux
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Configure Reddit API
-# Get credentials: https://www.reddit.com/prefs/apps
-# Edit .env file and add:
-REDDIT_CLIENT_ID=your_client_id
-REDDIT_CLIENT_SECRET=your_secret
 ```
 
 ### 2. Verify Setup
@@ -64,12 +58,11 @@ cat logs/divergence.log
 
 ## What Was Built
 
-### Data Sources (5)
+### Data Sources (4)
 1. **Yahoo Finance** - Daily OHLCV prices
 2. **Google Trends** - Search interest (0-100)
-3. **Reddit** - Sentiment from r/wallstreetbets, r/stocks, r/investing
-4. **SEC 13F** - Institutional holdings (quarterly)
-5. **SEC Form 4** - Insider transactions (event-driven)
+3. **SEC 13F** - Institutional holdings (quarterly)
+4. **SEC Form 4** - Insider transactions (event-driven)
 
 ### Stock Coverage (12)
 **Magnificent 7:** AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA
@@ -88,15 +81,14 @@ cat logs/divergence.log
 
 ```
 src/
-├── collectors/              # 5 data collectors
+├── collectors/              # 4 data collectors
 │   ├── base.py             # Base class with common functionality
 │   ├── price_collector.py  # Yahoo Finance integration
 │   ├── google_trends_collector.py  # Google Trends with interpolation
-│   ├── reddit_collector.py # Reddit sentiment analysis
 │   └── sec_collector.py    # SEC 13F & Form 4
 ├── database/               # SQLAlchemy ORM
 │   ├── base.py            # Connection & session management
-│   └── models.py          # 7 database tables
+│   └── models.py          # 6 database tables
 ├── validators/            # Data quality checks
 │   └── data_validator.py  # Validation & reporting
 ├── config/                # Configuration
@@ -119,13 +111,12 @@ Scripts:
 
 ## Database Schema
 
-**7 Tables:**
+**6 Tables:**
 - `tickers` - Stock symbols and company names
 - `prices` - Daily OHLCV data
 - `institutional_holdings` - SEC 13F quarterly data
 - `insider_transactions` - SEC Form 4 insider trades
 - `google_trends` - Daily search interest
-- `reddit_sentiment` - Daily mentions and sentiment
 - `z_scores` - Normalized metrics (Phase 1.2)
 
 **Example queries:**
@@ -151,25 +142,14 @@ ORDER BY date DESC LIMIT 5;
 DATABASE_URL=sqlite:///data/divergence.db  # Dev
 # DATABASE_URL=postgresql://user:pass@host/db  # Prod
 
-# Reddit API (required for sentiment data)
-REDDIT_CLIENT_ID=your_client_id
-REDDIT_CLIENT_SECRET=your_secret
-
 # Data Collection
 DATA_START_DATE=2024-01-01
 
 # Rate Limits (requests per minute)
 SEC_RATE_LIMIT=60
-REDDIT_RATE_LIMIT=60
 GOOGLE_TRENDS_RATE_LIMIT=100
 YAHOO_FINANCE_RATE_LIMIT=2000
 ```
-
-**Get Reddit Credentials:**
-1. Go to https://www.reddit.com/prefs/apps
-2. Click "Create App" → Choose "script"
-3. Copy client ID and secret
-4. Add to `.env` file
 
 ## Testing
 
@@ -191,7 +171,6 @@ pytest tests/integration/
 
 | Issue | Solution |
 |-------|----------|
-| Reddit credentials not set | Configure `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` in `.env` |
 | Rate limit (429) error | Wait 1-2 minutes, script has automatic backoff |
 | Database locked | Close any database browser tools |
 | Import errors | Activate virtual environment: `venv\Scripts\activate` |

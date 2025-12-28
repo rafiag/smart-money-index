@@ -2,7 +2,7 @@
 
 ## 1. Background & Goals
 ### **Background**
-In modern equity markets, the price of "story stocks" (like **ASTS**) or cyclical giants (like **MU**) is often driven by two distinct forces: institutional accumulation and retail momentum. Institutional investors (Hedge Funds, ETFs) move slowly and based on fundamentals, while retail investors (Reddit, Google Search) often drive high-volatility "hype" cycles. 
+In modern equity markets, the price of "story stocks" (like **ASTS**) or cyclical giants (like **MU**) is often driven by two distinct forces: institutional accumulation and retail momentum. Institutional investors (Hedge Funds, ETFs) move slowly and based on fundamentals, while retail investors (measured via Google Search trends) often drive high-volatility "hype" cycles. 
 
 This project aims to visualize the tension between these two groups to identify market tops, bottoms, and "smart money" accumulation phases.
 
@@ -22,10 +22,8 @@ To build this index, you need to sync data from three distinct pillars:
 * **Source:** SEC EDGAR (via `edgartools`).
 
 ### **Pillar B: Retail Data (The "Hype")**
-* **Search Volume:** Relative interest over time for specific tickers. 
+* **Search Volume:** Relative interest over time for specific tickers.
     * *Source:* Google Trends (via `pytrends`).
-* **Social Sentiment:** Comment volume and polarity from r/WallStreetBets and r/Stocks.
-    * *Source:* Reddit API (via `praw`).
 
 ### **Pillar C: Market Data (The "Truth")**
 * **Price & Volume:** Historical OHLCV (Open, High, Low, Close, Volume) data.
@@ -38,9 +36,9 @@ This stack focuses on Python-based tools that transition from data analysis to a
 
 ### **Data Gathering & Engineering**
 * **Language:** Python 3.10+
-* **APIs/Libraries:** * `edgartools` (SEC Filings)
+* **APIs/Libraries:**
+    * `edgartools` (SEC Filings)
     * `pytrends` (Google Trends)
-    * `praw` (Reddit Scraping)
     * `yfinance` (Stock Prices)
 * **Processing:** `Pandas` and `NumPy` (Data cleaning and Z-score normalization).
 
@@ -66,7 +64,7 @@ This allows the dashboard to show how many standard deviations "above normal" a 
 **Implementation Details:**
 * Rolling windows: 30-day for short-term signals, 90-day for long-term trends
 * Outlier detection using IQR (Interquartile Range) method
-* Robust statistics (Median Absolute Deviation) for highly skewed data like Reddit mentions
+* Robust statistics (Median Absolute Deviation) for highly skewed data
 * Edge case handling for insufficient data, zero variance, and missing values
 
 ### **Phase 2: Lead-Lag Correlation Analysis**
@@ -115,7 +113,7 @@ After the MVP is complete and validated, the system will add statistical correla
 **Solution:**
 * Automated validation pipeline that runs after data collection
 * Ticker symbol verification against NYSE/NASDAQ exchange lists
-* Outlier flagging for manual review (e.g., Reddit mentions >1000% above normal)
+* Outlier flagging for manual review (e.g., search interest >1000% above normal)
 * Context validation for ticker mentions (e.g., "MU" must appear in financial context, not as generic word)
 * Data completeness checks across all 12 tickers
 
@@ -124,17 +122,15 @@ After the MVP is complete and validated, the system will add statistical correla
 
 **Solution:**
 * SEC EDGAR: Polite rate limiting (1 request/second recommended)
-* Reddit (PRAW): OAuth authentication, 60 requests/minute limit
 * Google Trends: Exponential backoff for ~100 requests/hour (unofficial limit)
 * Yahoo Finance: Response caching to minimize redundant calls
 
 ### **Data Frequency Alignment**
-**Challenge:** Different data sources update at different frequencies (13F quarterly, Reddit daily, Google Trends weekly, Price daily).
+**Challenge:** Different data sources update at different frequencies (13F quarterly, Google Trends weekly, Price daily).
 
 **Solution:**
 * 13F Holdings: Quarterly (45-day filing lag) - treat as long-term anchor
 * Form 4 Insider: Event-driven - forward-fill to daily
-* Reddit Sentiment: Aggregate to daily (sum mentions, average polarity)
 * Google Trends: Weekly data - interpolate to daily for visualization
 * Price (OHLCV): Daily - baseline frequency for all visualizations
 

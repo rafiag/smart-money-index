@@ -6,7 +6,6 @@ from .models import (
     InsiderTransaction,
     InstitutionalHolding,
     Price,
-    RedditSentiment,
     Ticker,
     ZScore,
 )
@@ -21,6 +20,5 @@ __all__ = [
     "InstitutionalHolding",
     "InsiderTransaction",
     "GoogleTrend",
-    "RedditSentiment",
     "ZScore",
 ]

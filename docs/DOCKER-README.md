@@ -70,9 +70,7 @@ This guide covers Docker setup for the Smart Money Divergence Index project, inc
    cp .env.example .env
    ```
 
-   Edit `.env` and add your API credentials:
-   - Reddit API credentials (required for data collection)
-   - Other API keys as needed
+   Edit `.env` and add your API credentials as needed.
 
 3. **Build and run in development mode**
    ```bash
@@ -265,11 +263,8 @@ docker system prune -a --volumes
 
 Edit `.env` file and set:
 
-```bash
-# Reddit API (required for data collection)
-REDDIT_CLIENT_ID=your_reddit_client_id
-REDDIT_CLIENT_SECRET=your_reddit_client_secret
-```
+# API Credentials (If needed)
+# ADD_YOUR_KEYS_HERE=value
 
 ### Optional Variables
 

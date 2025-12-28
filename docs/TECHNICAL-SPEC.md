@@ -15,18 +15,16 @@ This document contains detailed implementation specifications for developers. Fo
     *   **Production:** PostgreSQL (cloud-hosted, supports concurrent users)
     *   **Strategy:** SQLAlchemy ORM abstracts database layer - same code works with both
 *   **ORM:** SQLAlchemy for database abstraction and migrations
-*   **APIs:** edgartools (SEC), praw (Reddit), pytrends (Google Trends), yfinance (Market Data)
+*   **APIs:** edgartools (SEC), pytrends (Google Trends), yfinance (Market Data)
 
 **API Rate Limits & Strategy:**
 *   **SEC EDGAR:** No authentication, polite rate limiting (1 request/second recommended)
-*   **Reddit (PRAW):** OAuth required, 60 requests/minute limit
 *   **Google Trends:** ~100 requests/hour (unofficial), implement exponential backoff
 *   **Yahoo Finance:** No official limit, cache responses to minimize redundant calls
 
 **Data Frequency Alignment:**
 *   **Phase 2 - 13F Holdings (Inverted Search):** Quarterly (45-day lag) - requires inverted search of fund filings
 *   **Form 4 Insider:** Event-driven (irregular) - forward-fill to daily
-*   **Reddit Sentiment:** Aggregate to daily (sum mentions, average polarity)
 *   **Google Trends:** Weekly data - interpolate to daily for visualization
 *   **Price (OHLCV):** Daily - baseline frequency for all visualizations
 
@@ -62,7 +60,7 @@ This document contains detailed implementation specifications for developers. Fo
 *   Treatment: Winsorization (cap at 99th percentile) rather than removal
 
 **Robust Statistics Alternative:**
-*   For highly skewed data (Reddit mentions), use Median Absolute Deviation (MAD) instead of standard deviation
+*   For highly skewed data, use Median Absolute Deviation (MAD) instead of standard deviation
 *   Formula: `Robust Z = (x - median) / MAD`
 
 **Edge Case Handling:**
@@ -106,14 +104,14 @@ This document contains detailed implementation specifications for developers. Fo
 **Validation Rules:**
 *   **Ticker Symbol Validation:** Verify against NYSE/NASDAQ exchange lists (prevent typos like "APLE" instead of "AAPL")
 *   **Missing Data Detection:** Flag gaps in time series (weekends/holidays expected, weekdays require investigation)
-*   **Outlier Flagging:** Identify extreme values for manual review (e.g., Reddit mentions >1000% above normal)
+*   **Outlier Flagging:** Identify extreme values for manual review (e.g., search interest >1000% above normal)
 *   **Data Completeness:** Ensure all 12 tickers have data for all expected dates
 *   **Type Validation:** Verify data types (dates are datetime, prices are float, tickers are string)
-*   **Range Checks:** Prices > 0, ownership percentages 0-100%, sentiment scores within expected bounds
+*   **Range Checks:** Prices > 0, ownership percentages 0-100%, search interest 0-100
 
 **Ticker Disambiguation:**
 *   **"MU" Filter:** Ensure "MU" refers to Micron Technology (ticker: MU) not generic word usage
-*   **Context Validation:** For Reddit data, verify ticker appears in financial context (not random mentions)
+*   **Context Validation:** Verify ticker appears in financial context (not random mentions)
 
 **Testing Requirements:**
 *   Unit tests for each validation rule
@@ -149,7 +147,7 @@ This document contains detailed implementation specifications for developers. Fo
 **Architecture:**
 *   **Scheduler:** Use APScheduler or Celery for job scheduling
 *   **Job Frequency:**
-    *   Weekly updates for Retail/Market data (Google Trends, Reddit, Price)
+    *   Weekly updates for Retail/Market data (Google Trends, Price)
     *   Quarterly updates for Institutional data (13F filings)
 *   **Incremental Logic:** Query database for last update timestamp, fetch only newer data
 *   **Error Recovery:** Implement retry logic with exponential backoff
@@ -315,19 +313,6 @@ CREATE TABLE google_trends (
 );
 ```
 
-**reddit_sentiment**
-```sql
-CREATE TABLE reddit_sentiment (
-    sentiment_id SERIAL PRIMARY KEY,
-    ticker_id INTEGER REFERENCES tickers(ticker_id),
-    date DATE NOT NULL,
-    mention_count INTEGER,
-    sentiment_score DECIMAL(3, 2), -- -1 to +1 scale
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(ticker_id, date)
-);
-```
-
 **z_scores**
 ```sql
 CREATE TABLE z_scores (
@@ -337,7 +322,6 @@ CREATE TABLE z_scores (
     price_z DECIMAL(6, 3),
     institutional_z DECIMAL(6, 3),
     retail_search_z DECIMAL(6, 3),
-    retail_sentiment_z DECIMAL(6, 3),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(ticker_id, date)
 );
@@ -349,7 +333,6 @@ CREATE TABLE z_scores (
 CREATE INDEX idx_prices_ticker_date ON prices(ticker_id, date);
 CREATE INDEX idx_institutional_ticker_quarter ON institutional_holdings(ticker_id, quarter_end);
 CREATE INDEX idx_trends_ticker_date ON google_trends(ticker_id, date);
-CREATE INDEX idx_sentiment_ticker_date ON reddit_sentiment(ticker_id, date);
 CREATE INDEX idx_zscores_ticker_date ON z_scores(ticker_id, date);
 ```
 
