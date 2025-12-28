@@ -27,6 +27,7 @@
 - **Phase 1 (MVP):** Core dashboard with Form 4 insider data, Price, and Google Trends
 - **Phase 2:** Automated sync, Advanced 13F "Inverted Search" for institutional holdings, Lead-Lag analysis
 - **Phase 3:** Real-time data, Multi-stock scanner
+- **Development Environment:** ALL development, testing, and data collection MUST be performed within the Docker environment. Local `venv` is for IDE indexing only.
 
 ---
 
@@ -65,15 +66,15 @@
 
 ### Example
 ```
-Claude: "Ready to implement Reddit sentiment scraper. Plan:
+Claude: "Ready to implement Google Trends collector. Plan:
 
-- Use PRAW library to fetch from r/WallStreetBets, r/Stocks
-- TextBlob for sentiment scoring (-1 to +1)
-- Extract tickers with regex, aggregate daily mentions + avg sentiment
-- Store in RetailSentiment table (ticker, date, mentions, sentiment_score)
-- Unit tests for ticker extraction, integration test with mocked PRAW
+- Use pytrends library to fetch search interest data
+- Normalize to Z-scores for comparison with other metrics
+- Store in GoogleTrend table (ticker, date, search_interest)
+- Handle rate limiting with exponential backoff
+- Unit tests for data normalization, integration test with mocked pytrends
 
-Tradeoff: TextBlob is simpler than VADER but less finance-tuned (fine for MVP)
+Tradeoff: Google Trends has unofficial rate limits, so we'll cache aggressively
 
 Good to proceed?"
 
@@ -249,7 +250,6 @@ Visualizes the tension between institutional investors ("smart money") and retai
 
 2. **Retail Data (Hype)**
    - Google Trends: Search volume for tickers
-   - Reddit: Sentiment and mentions from r/WallStreetBets, r/Stocks
    - Represents: Short-term momentum and sentiment
 
 3. **Market Data (Truth)**
@@ -349,6 +349,7 @@ The project has three main planning documents:
 - **User-Facing Decision?** → Ask (see Section 4 for template)
 - **Purely Technical?** → Decide independently and document in TECHNICAL-SPEC.md
 - **New Feature?** → Present implementation plan first (see Section 2 workflow)
+- **Environment Rule:** → Always run/test code via Docker Compose services.
 
 ### The Golden Rule
 You're the technical expert. Make it work beautifully, handle complexity invisibly, and only surface decisions that affect the user's experience.

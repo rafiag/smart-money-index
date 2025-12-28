@@ -1,0 +1,142 @@
+# Smart Money Divergence Index - Docker Compose Configuration
+# Supports both development (SQLite) and production (PostgreSQL) modes
+
+version: '3.8'
+
+services:
+  # =============================================================================
+  # Development Mode: Streamlit + SQLite (single container)
+  # Usage: docker compose up app-dev
+  # =============================================================================
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-money-dev
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount source code for live editing
+      - ./:/app
+      # Persist SQLite database
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=sqlite:///data/divergence.db
+      - ENVIRONMENT=development
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - smart-money-network
+
+  # =============================================================================
+  # Production Mode: Streamlit App
+  # Usage: docker compose --profile production up
+  # =============================================================================
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-money-app
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=postgresql://smartmoney:smartmoney_password@postgres:5432/divergence_db
+      - ENVIRONMENT=production
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - smart-money-network
+    profiles:
+      - production
+
+  # =============================================================================
+  # Data Collector (One-off or Scheduled task)
+  # Usage: docker compose run --rm collector
+  # =============================================================================
+  collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-money-collector
+    volumes:
+      - ./:/app
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["python", "collect_data.py"]
+    networks:
+      - smart-money-network
+    profiles:
+      - tools
+
+  # =============================================================================
+  # PostgreSQL Database (Production Mode Only)
+  # =============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: smart-money-postgres
+    environment:
+      - POSTGRES_DB=divergence_db
+      - POSTGRES_USER=smartmoney
+      - POSTGRES_PASSWORD=smartmoney_password
+    volumes:
+      # Persist PostgreSQL data
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartmoney -d divergence_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - smart-money-network
+    profiles:
+      - production
+
+  # =============================================================================
+  # pgAdmin (Optional - Database Management UI)
+  # Usage: docker compose --profile tools up pgadmin
+  # Access at: http://localhost:5050
+  # =============================================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: smart-money-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@smartmoney.local
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - smart-money-network
+    profiles:
+      - tools
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  postgres_data:
+    name: smart-money-postgres-data
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  smart-money-network:
+    name: smart-money-network
+    driver: bridge

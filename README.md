@@ -59,14 +59,15 @@ When institutional and retail investors move in opposite directions, it can sign
 - SMCI (Super Micro Computer)
 - HOOD (Robinhood)
 
-## Quick Start
+## Quick Start (Dockerized)
+
+This project is built to run entirely within Docker for environment consistency.
 
 ### Prerequisites
-- Python 3.10 or higher
-- pip (Python package manager)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
 - Git
 
-### Installation
+### Installation & Setup
 
 1. **Clone the repository:**
    ```bash
@@ -74,62 +75,38 @@ When institutional and retail investors move in opposite directions, it can sign
    cd "The Smart Money Divergence Index"
    ```
 
-2. **Create a virtual environment:**
-   ```bash
-   python -m venv venv
-   ```
-
-3. **Activate the virtual environment:**
-   - **Windows (Git Bash):**
-     ```bash
-     . venv/Scripts/activate
-     ```
-     Or alternatively:
-     ```bash
-     venv/Scripts/activate
-     ```
-   - **Windows (Command Prompt):**
-     ```cmd
-     venv\Scripts\activate
-     ```
-   - **Windows (PowerShell):**
-     ```powershell
-     venv\Scripts\Activate.ps1
-     ```
-   - **macOS/Linux:**
-     ```bash
-     source venv/bin/activate
-     ```
-
-4. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-5. **Set up environment variables:**
+2. **Set up environment variables:**
    ```bash
    cp .env.example .env
    ```
+   *Edit the `.env` file to add any necessary API keys or configurations.*
 
-   Edit the `.env` file and add your configuration:
-   - Database URL (SQLite for development, PostgreSQL for production)
-
-6. **Verify setup:**
+3. **Start the Development Environment:**
    ```bash
-   python verify_setup.py
+   docker compose up app-dev
+   ```
+   *This starts the Streamlit dashboard with a local SQLite database. Access it at `http://localhost:8501`.*
+
+4. **Collect Historical Data (Containerized):**
+   ```bash
+   docker compose run --rm collector
+   ```
+   *This runs the data ingestion pipeline inside a container, matching the production environment.*
+
+5. **Run Tests (Containerized):**
+   ```bash
+   docker compose run --rm app-dev pytest
    ```
 
-7. **Collect historical data:**
-   ```bash
-   python collect_data.py
-   ```
+### (Optional) Local Development Setup
+If you prefer to have local IDE indexing and linting, you can still create a local virtual environment:
+```bash
+python -m venv venv
+# Activate venv based on your OS
+pip install -r requirements.txt
+```
+*Note: Always use `docker compose` for executing code to ensure consistency with production.*
 
-8. **(Coming in Phase 1.3) Run the dashboard:**
-   ```bash
-   streamlit run src/dashboard/app.py
-   ```
-
-   The dashboard will open in your browser at `http://localhost:8501`
 
 **See [README.md** - Quick start & overview
 

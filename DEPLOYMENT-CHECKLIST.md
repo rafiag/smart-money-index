@@ -2,21 +2,20 @@
 
 ## Phase 1: Initial Setup & Configuration
 
-### 1. Environment Setup
-- [x] Python 3.11+ installed
-- [x] Virtual environment created (`python -m venv venv`)
-- [x] Virtual environment activated
-- [x] All dependencies installed (`pip install -r requirements.txt`)
+### 1. Environment Setup (Dockerized)
+- [x] Docker Desktop installed and running
 - [x] Git repository initialized
-- [x] `.gitignore` configured (exclude `.env`, `data/`, `__pycache__/`)
+- [x] `.gitignore` configured
+- [x] `.dockerignore` configured
+- [x] `.env` file created from `.env.example`
+- [x] (Optional) Local `venv` created for IDE indexing
 
-### 2. Database Setup
-- [x] SQLite database directory created (`data/` folder)
+### 2. Services & Database Setup (Dockerized)
+- [x] Start development container: `docker compose up app-dev`
 - [x] Database URL configured in `.env`:
-  - [x] Development: `DATABASE_URL=sqlite:///data/divergence.db`
-  - [ ] Production: PostgreSQL URL (if applicable)
-- [x] Database tables created: `python collect_data.py` (First run initializes)
-- [x] Database connection tested
+  - [x] Development: `DATABASE_URL=sqlite:///data/divergence.db` (Mapped to local `data/` volume)
+- [x] Initialize database and collect initial data: `docker compose run --rm collector`
+- [x] Database connection and health verified within container
 
 ### 3. Environment Variables Configuration
 Review and configure `.env` file:
@@ -41,14 +40,14 @@ Review and configure `.env` file:
 ## Phase 2: Data Collection
 
 ### 4. Test Individual Data Collectors
-- [x] Test SEC Form 13F/4 collectors: `python tests/unit/test_form4_parser.py`
-- [x] Test Price/Trends connectivity: `python scripts/verify_setup.py`
+- [x] Test SEC Form 13F/4 collectors: `docker compose run --rm app-dev python tests/unit/test_form4_parser.py`
+- [x] Test Price/Trends connectivity: `docker compose run --rm app-dev python scripts/verify_setup.py`
 
 ### 5. Initial Historical Data Collection
 Run collectors for all 12 whitelisted tickers (2024 onward):
 
 **Market & Retail Data**
-- [x] Collect data for all tickers: `python collect_data.py`
+- [x] Collect data for all tickers: `docker compose run --rm collector`
 
 ### 6. Verify Data Collection
 - [x] Check console output for "COLLECTION SUMMARY"
@@ -69,9 +68,9 @@ Run collectors for all 12 whitelisted tickers (2024 onward):
 - [ ] Generate test visualizations
 
 ### 8. Quality Assurance
-- [ ] Run unit tests: `pytest tests/unit/`
-- [ ] Run integration tests: `pytest tests/integration/`
-- [ ] Run end-to-end tests: `pytest tests/e2e/`
+- [ ] Run unit tests: `docker compose run --rm app-dev pytest tests/unit/`
+- [ ] Run integration tests: `docker compose run --rm app-dev pytest tests/integration/`
+- [ ] Run end-to-end tests: `docker compose run --rm app-dev pytest tests/e2e/`
 - [ ] Verify all tests pass
 - [ ] Check code coverage (aim for >80%)
 
@@ -80,9 +79,9 @@ Run collectors for all 12 whitelisted tickers (2024 onward):
 ## Phase 4: Dashboard Development
 
 ### 9. Streamlit Dashboard Setup
-- [ ] Streamlit installed: `pip install streamlit`
+- [ ] Streamlit installed: (Included in Docker image)
 - [ ] Dashboard file created: `src/dashboard/app.py`
-- [ ] Dashboard runs locally: `streamlit run src/dashboard/app.py`
+- [ ] Dashboard runs locally: `docker compose up app-dev`
 - [ ] Test ticker selection dropdown (12 tickers)
 - [ ] Test date range filtering
 - [ ] Test data source toggles (institutional/retail/price)
